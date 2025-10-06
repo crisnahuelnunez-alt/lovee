@@ -21,7 +21,7 @@ body {
 #particle-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1}
 .hidden{display:none!important}
 
-/* --- ESTILOS DEL ROMPECABEZAS (AHORA RESPONSIVE) --- */
+/* --- ESTILOS DEL ROMPECABEZAS --- */
 #inicio {
     display: flex;
     justify-content: center;
@@ -29,7 +29,7 @@ body {
     height: 100vh;
     position: relative;
     z-index: 3;
-    padding: 1rem; /* Usamos rem para espaciado flexible */
+    padding: 1rem;
     box-sizing: border-box;
 }
 
@@ -39,7 +39,7 @@ body {
     padding: 1rem 1.5rem;
     border-radius: 20px;
     width: 100%;
-    max-width: 400px; /* Limite para que no sea gigante en tablets */
+    max-width: 400px;
 }
 
 #puzzle-wrapper h1 {
@@ -52,24 +52,22 @@ body {
 
 #puzzle-container {
     display: grid;
-    /* Las columnas ahora son fracciones del espacio disponible */
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
     border: 2px solid var(--accent-color);
     border-radius: 10px;
     background-color: rgba(0, 0, 0, 0.2);
-    margin: 0 auto 20px auto; /* Centrado */
-    width: 80vw; /* El contenedor ocupa el 80% del ancho de la pantalla */
-    max-width: 300px; /* Límite para pantallas grandes */
-    aspect-ratio: 1 / 1; /* Mantiene la forma cuadrada */
+    margin: 0 auto 20px auto;
+    width: 80vw;
+    max-width: 300px;
+    aspect-ratio: 1 / 1;
 }
 
 .puzzle-slot {
-    width: 100%; /* Las piezas ocupan el 100% de su celda */
+    width: 100%;
     height: 100%;
     box-sizing: border-box;
     background-image: url('assets/foto5.jpg');
-    /* El fondo ahora es 300% para que cada pieza muestre 1/3 de la imagen */
     background-size: 300% 300%;
 }
 
@@ -82,12 +80,12 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: calc(26.6vw + 10px); /* Altura dinámica basada en el tamaño de la pieza */
+    min-height: calc(26.6vw + 10px);
     max-height: 110px;
 }
 
 .puzzle-piece {
-    width: 26.6vw; /* 1/3 del ancho del contenedor del rompecabezas */
+    width: 26.6vw;
     height: 26.6vw;
     max-width: 100px;
     max-height: 100px;
@@ -102,13 +100,13 @@ body {
 .puzzle-piece:hover{transform:scale(1.1);box-shadow:0 0 15px var(--shadow-color)}
 .puzzle-piece.dragging{cursor:grabbing;opacity:.5}
 
-/* --- PANTALLA DE SORPRESA (MOBILE FIRST) --- */
+/* --- PANTALLA DE SORPRESA --- */
 #sorpresa{display:flex;justify-content:center;align-items:center;height:100vh;position:relative;z-index:2;animation:fadeIn 2s ease}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 #marco-ritmico{position:relative;padding:10px;border-radius:20px;transition:box-shadow .1s ease-out,transform .1s ease-out}
 
 .marco-magico {
-    width: 90vw; /* En móvil, ocupa casi toda la pantalla */
+    width: 90vw;
     position: relative;
     z-index: 3;
     box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
@@ -120,9 +118,41 @@ body {
 .pantalla{position:absolute;top:0;left:0;width:100%;height:100%;background:#000;border-radius:15px;overflow:hidden}
 #background-slideshow{position:absolute;width:100%;height:100%;background-size:cover;background-position:center;animation:kenburns 35s infinite}
 @keyframes kenburns{0%{background-image:url(assets/foto1.jpg);transform:scale(1);opacity:1}18%{transform:scale(1.05)}20%{opacity:0}20.1%{background-image:url(assets/foto2.jpg);transform:scale(1);opacity:1}38%{transform:scale(1.05)}40%{opacity:0}40.1%{background-image:url(assets/foto3.jpg);transform:scale(1);opacity:1}58%{transform:scale(1.05)}60%{opacity:0}60.1%{background-image:url(assets/foto4.jpg);transform:scale(1);opacity:1}78%{transform:scale(1.05)}80%{opacity:0}80.1%{background-image:url(assets/foto5.jpg);transform:scale(1);opacity:1}98%{transform:scale(1.05)}100%{opacity:0}}
-.superposicion-letras{position:absolute;bottom:15%;left:0;width:100%;text-align:center;pointer-events:none}
 
-#letras{font-family:var(--font-lyrics);font-weight:700;font-size:clamp(1.2rem,5vw,2rem);text-transform:uppercase;color:rgba(255,255,255,.4);position:relative;display:inline-block;padding:5px;transition:all .5s ease;opacity:0}
+/* --- NUEVO ESTILO: Recuadro para las letras --- */
+.letras-recuadro {
+    position: absolute;
+    bottom: 0; /* Lo fija en la parte inferior del marco de las fotos */
+    left: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Fondo semitransparente */
+    padding: 1rem 0.5rem; /* Espaciado interno */
+    box-sizing: border-box;
+    text-align: center;
+    border-bottom-left-radius: 15px; /* Redondeamos las esquinas de abajo */
+    border-bottom-right-radius: 15px;
+    display: flex; /* Para centrar la letra verticalmente si ocupa menos de una línea */
+    align-items: center;
+    justify-content: center;
+    min-height: 80px; /* Asegura un mínimo de altura */
+    backdrop-filter: blur(3px); /* Efecto de desenfoque, si el navegador lo soporta */
+}
+
+#letras {
+    font-family: var(--font-lyrics);
+    font-weight: 700;
+    font-size: clamp(1rem, 4.5vw, 1.8rem); /* Un poco más pequeña para que quepa bien */
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
+    position: relative;
+    display: inline-block;
+    padding: 0; /* Quitamos el padding interno del h2 */
+    margin: 0; /* Quitamos el margen por defecto del h2 */
+    transition: all 0.5s ease;
+    opacity: 0;
+    line-height: 1.3; /* Espaciado entre líneas */
+}
+
 #letras::before{content:attr(data-text);position:absolute;top:0;left:0;width:0;height:100%;color:#fff;-webkit-text-stroke:1px rgba(0,0,0,.5);overflow:hidden;transition:width var(--karaoke-duration, .5s) linear;}
 #letras.visible{opacity:1}
 #letras.visible::before{width:100%}
@@ -142,7 +172,7 @@ body {
 /* --- ESTILOS PARA TABLET Y DESKTOP --- */
 @media (min-width: 768px) {
     .marco-magico {
-        width: 60vw; /* En pantallas grandes, el marco es más pequeño */
+        width: 60vw;
         max-width: 500px;
     }
 }
