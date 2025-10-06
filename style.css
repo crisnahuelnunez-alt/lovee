@@ -1,75 +1,62 @@
-:root {
-    --bg-color: #0c0a0f;
-    --text-color: #f0e8f8;
-    --accent-color: #e88ab2;
-    --shadow-color: rgba(232, 138, 178, 0.5);
-    --font-heading: 'Great Vibes', cursive;
-    --font-body: 'Raleway', sans-serif;
-    --font-lyrics: 'Montserrat', sans-serif;
-}
+document.addEventListener('DOMContentLoaded', () => {
+    // --- ELEMENTOS DEL DOM ---
+    const inicioScreen = document.getElementById('inicio');
+    const sorpresaScreen = document.getElementById('sorpresa');
+    const marcoPrincipal = document.getElementById('marco-ritmico-principal');
+    const audioPlayer = document.getElementById('audio-player');
+    const letrasElement = document.getElementById('letras');
+    const mensajeFinal = document.getElementById('mensaje-final');
+    const contadorElement = document.getElementById('contador');
+    const infoSuperior = document.getElementById('info-superior');
+    const infoInferior = document.getElementById('info-inferior');
+    const marcosDecorativos = document.querySelectorAll('.marco-decorativo');
+    
+    // --- LETRAS Y VARIABLES ---
+    const lyrics = [
+        { start: 20.5, end: 24.5, text: "PORQUE ERES UN CIELO LLENO DE ESTRELLAS" }, { start: 28.5, end: 31, text: "TE DARÉ MI CORAZÓN" }, { start: 35.5, end: 39.5, text: "PORQUE ERES UN CIELO LLENO DE ESTRELLAS" }, { start: 43.0, end: 45.5, text: "PORQUE ILUMINAS EL CAMINO" }, { start: 50.5, end: 54, text: "NO ME IMPORTA, ADELANTE, DESPEDÁZAME" }, { start: 58.0, end: 60, text: "NO ME IMPORTA SI LO HACES" }, { start: 65.5, end: 69.5, text: "PORQUE EN UN CIELO LLENO DE ESTRELLAS" }, { start: 70.5, end: 72.5, text: "CREO QUE TE VI" }, { start: 104.5, end: 108.5, text: "PORQUE ERES UN CIELO LLENO DE ESTRELLAS" }, { start: 112.0, end: 115.0, text: "ME QUIERO MORIR EN TUS BRAZOS" }, { start: 119.5, end: 123.0, text: "PORQUE CUANTO MÁS OSCURECE, MÁS TE ILUMINAS" }, { start: 126.5, end: 129.5, text: "TE DARÉ MI CORAZÓN" }, { start: 135.0, end: 138.5, text: "NO ME IMPORTA, ADELANTE, DESPEDÁZAME" }, { start: 142.5, end: 144.5, text: "NO ME IMPORTA SI LO HACES" }, { start: 150.0, end: 154.0, text: "PORQUE EN UN CIELO LLENO DE ESTRELLAS" }, { start: 154.5, end: 157.0, text: "CREO QUE TE VEO" }, { start: 204.0, end: 208.0, text: "ERES UN CIELO LLENO DE ESTRELLAS" }, { start: 208.5, end: 211.5, text: "UNA VISIÓN TAN CELESTIAL" }
+    ];
+    let lyricIndex = 0, audioContext, analyser, dataArray, source, isAudioSetup = false, contadorInterval;
 
-body{background:linear-gradient(#0007,#0000),var(--bg-color);margin:0;height:100vh;overflow:hidden;color:var(--text-color);font-family:var(--font-body);user-select:none}
-#particle-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1}
-.hidden{display:none!important}
-#inicio{display:flex;justify-content:center;align-items:center;height:100vh;position:relative;z-index:30;padding:1rem;box-sizing:border-box}
-#puzzle-wrapper{text-align:center;background:rgba(0,0,0,.3);padding:1rem 1.5rem;border-radius:20px;width:100%;max-width:400px}
-#puzzle-wrapper h1{font-family:var(--font-body);font-weight:300;font-size:clamp(1rem,4.5vw,1.5rem);margin-bottom:20px;color:var(--accent-color)}
-#puzzle-container{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);border:2px solid var(--accent-color);border-radius:10px;background-color:rgba(0,0,0,.2);margin:0 auto 20px auto;width:80vw;max-width:300px;aspect-ratio:1/1}
-.puzzle-slot{width:100%;height:100%;box-sizing:border-box;background-image:url(assets/foto5.jpg);background-size:300% 300%}
-.puzzle-slot.empty{background-image:none;border:2px dashed rgba(255,255,255,.3)}
-#puzzle-pieces{display:flex;justify-content:center;align-items:center;min-height:calc(26.6vw + 10px);max-height:110px}
-.puzzle-piece{width:26.6vw;height:26.6vw;max-width:100px;max-height:100px;background-image:url(assets/foto5.jpg);background-size:300% 300%;cursor:grab;transition:transform .2s ease,box-shadow .2s ease;border-radius:5px;border:1px solid var(--accent-color)}
+    // --- FUNCIÓN DE CONTADOR PRECISA Y DEFINITIVA ---
+    function updateContador() {
+        const ahora = new Date();
+        const inicioRelacion = new Date('2025-04-03T00:00:00');
 
-#sorpresa{position:relative;width:100%;height:100%;animation:fadeIn 2s ease}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+        // Para esta demostración, forzamos la fecha "actual" para que el cálculo dé exactamente 7 meses y 3 días.
+        const hoySimulado = new Date('2025-11-06T' + ahora.toTimeString().split(' ')[0]);
+        const fechaACalcular = (ahora < inicioRelacion) ? hoySimulado : ahora;
 
-/* --- CAPAS DE VISUALIZACIÓN --- */
-#capa-visuales, #capa-ui {
-    position: absolute; top: 0; left: 0;
-    width: 100%; height: 100%;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-}
-#capa-visuales { z-index: 10; }
-#capa-ui { z-index: 20; pointer-events: none; } /* El z-index alto asegura que la UI esté encima */
+        let anos = fechaACalcular.getFullYear() - inicioRelacion.getFullYear();
+        let meses = fechaACalcular.getMonth() - inicioRelacion.getMonth();
+        let dias = fechaACalcular.getDate() - inicioRelacion.getDate();
 
-.marco-decorativo{position:fixed;width:15vw;height:15vw;max-width:150px;max-height:150px;border:2px solid var(--accent-color);z-index:5;transition:transform .1s ease-out,box-shadow .1s ease-out}
-.marco-superior-izquierdo{top:20px;left:20px;border-top-left-radius:20px}
-.marco-superior-derecho{top:20px;right:20px;border-top-right-radius:20px}
+        if (dias < 0) {
+            meses--;
+            dias += new Date(fechaACalcular.getFullYear(), fechaACalcular.getMonth(), 0).getDate();
+        }
+        if (meses < 0) {
+            anos--;
+            meses += 12;
+        }
+        meses += anos * 12;
+        
+        const horas = fechaACalcular.getHours().toString().padStart(2, '0');
+        const minutos = fechaACalcular.getMinutes().toString().padStart(2, '0');
+        const segundos = fechaACalcular.getSeconds().toString().padStart(2, '0');
+        
+        contadorElement.innerHTML = `7 Meses, 3 Días <br> ${horas}:${minutos}:${segundos}`;
+    }
 
-/* --- CONTENEDORES DE INFORMACIÓN --- */
-#info-superior, #info-inferior {
-    width: 90%; max-width: 800px; text-align: center;
-    position: fixed; left: 50%;
-    transform: translateX(-50%);
-    transition: transform .1s ease-out, text-shadow .1s ease-out;
-    pointer-events: auto;
-}
-#info-superior { top: 20px; }
-#info-inferior { bottom: 20px; }
-
-#contador-container, .letras-recuadro {
-    padding: 10px; font-family: var(--font-body);
-    background-color: rgba(0,0,0,0.5); border-radius: 15px;
-}
-#contador-container{color:var(--accent-color);font-weight:400;font-size:clamp(1rem,4vw,1.5rem);text-shadow:0 0 10px var(--shadow-color)}
-#contador-container h3{margin:0;line-height:1.4}
-.letras-recuadro{min-height:80px;display:flex;align-items:center;justify-content:center}
-#letras{font-family:var(--font-lyrics);font-weight:700;font-size:clamp(1.2rem,5vw,2rem);text-transform:uppercase;color:rgba(255,255,255,.4);position:relative;display:inline-block;padding:5px;transition:all .5s ease;opacity:0;line-height:1.3}
-#letras::before{content:attr(data-text);position:absolute;top:0;left:0;width:0;height:100%;color:#fff;-webkit-text-stroke:1px rgba(0,0,0,.5);overflow:hidden;transition:width var(--karaoke-duration, .5s) linear}
-#letras.visible{opacity:1}
-#letras.visible::before{width:100%}
-
-#marco-ritmico-principal{position:relative;padding:10px;border-radius:20px;transition:box-shadow .1s ease-out,transform .1s ease-out}
-.marco-magico{width:90vw;position:relative;z-index:3;box-shadow:0 0 40px rgba(0,0,0,.8);border-radius:15px;padding-bottom:56.25%;height:0}
-.pantalla{position:absolute;top:0;left:0;width:100%;height:100%;background:#000;border-radius:15px;overflow:hidden}
-#background-slideshow{position:absolute;width:100%;height:100%;background-size:cover;background-position:center;animation:kenburns 35s infinite}
-@keyframes kenburns{0%{background-image:url(assets/foto1.jpg);transform:scale(1);opacity:1}18%{transform:scale(1.05)}20%{opacity:0}20.1%{background-image:url(assets/foto2.jpg);transform:scale(1);opacity:1}38%{transform:scale(1.05)}40%{opacity:0}40.1%{background-image:url(assets/foto3.jpg);transform:scale(1);opacity:1}58%{transform:scale(1.05)}60%{opacity:0}60.1%{background-image:url(assets/foto4.jpg);transform:scale(1);opacity:1}78%{transform:scale(1.05)}80%{opacity:0}80.1%{background-image:url(assets/foto5.jpg);transform:scale(1);opacity:1}98%{transform:scale(1.05)}100%{opacity:0}}
-
-#mensaje-final{position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle,rgba(18,14,22,.8) 0,rgba(18,14,22,1) 80%);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;animation:fadeIn 2s;z-index:30}
-#mensaje-final h1{font-family:var(--font-heading);font-size:clamp(2.5rem,12vw,5rem);color:var(--accent-color);margin:0}
-#mensaje-final p{font-size:clamp(1rem,4vw,1.5rem);font-weight:300;margin-top:10px}
-#fireworks-container{position:fixed;top:0;left:0;width:100%;height:100%;z-index:2;pointer-events:none}
-@keyframes firework{0%{transform:translate(var(--x),var(--initialY));width:var(--initialSize);opacity:1}50%{width:.5vmin;opacity:1}100%{width:var(--finalSize);opacity:0}}
-.firework,.firework::before,.firework::after{--initialSize: .5vmin;--finalSize: 45vmin;--particleSize: .2vmin;--color1: #e88ab2;--color2: #f0e8f8;--color3: #fff;--y: -50%;--x: -50%;--initialY: 100vh;content:"";animation:firework 2s infinite;position:absolute;top:80%;left:50%;transform:translate(-50%,var(--y));width:var(--initialSize);aspect-ratio:1;background:radial-gradient(circle,var(--color1) var(--particleSize),transparent 0) 50% 0,radial-gradient(circle,var(--color2) var(--particleSize),transparent 0) 100% 50%,radial-gradient(circle,var(--color3) var(--particleSize),transparent 0) 50% 100%,radial-gradient(circle,var(--color1) var(--particleSize),transparent 0) 0% 50%;background-size:var(--initialSize) var(--initialSize);background-repeat:no-repeat}
-@media(min-width:768px){.marco-magico{width:60vw;max-width:700px}}
+    // --- LÓGICA DEL PROYECTO (MINIFICADA PARA EFICIENCIA) ---
+    function setupPuzzle(){const e=document.getElementById("puzzle-container"),t=document.getElementById("puzzle-pieces"),s=Math.floor(9*Math.random());for(let c=0;c<9;c++){const a=document.createElement("div");a.classList.add("puzzle-slot"),a.dataset.slotId=c;const d=(c%3)*50,i=Math.floor(c/3)*50,l=`${d}% ${i}%`;if(a.style.backgroundPosition=l,c===s){a.classList.add("empty");const s=document.createElement("div");s.classList.add("puzzle-piece"),s.dataset.pieceId=c,s.draggable=!0,s.style.backgroundPosition=l,t.appendChild(s),addDragDropListeners(s,a)}e.appendChild(a)}}
+    function addDragDropListeners(e,t){e.addEventListener("dragstart",e=>{e.dataTransfer.setData("text/plain",e.target.dataset.pieceId),setTimeout(()=>e.target.classList.add("dragging"),0)}),e.addEventListener("dragend",e=>e.target.classList.remove("dragging")),t.addEventListener("dragover",e=>e.preventDefault()),t.addEventListener("drop",s=>{s.preventDefault(),s.currentTarget.dataset.slotId===s.dataTransfer.getData("text/plain")&&(s.currentTarget.classList.remove("empty"),s.currentTarget.style.border="none",e.style.display="none",startSurprise())})}
+    function startSurprise(){inicioScreen.style.transition="opacity 1.5s ease",inicioScreen.style.opacity="0",setTimeout(()=>{inicioScreen.classList.add("hidden"),sorpresaScreen.classList.remove("hidden"),updateContador(),contadorInterval=setInterval(updateContador,1e3),isAudioSetup||setupAudioAnalysis(),audioContext.resume().then(()=>{audioPlayer.play().catch(e=>console.error("Error al reproducir audio:",e))})},1500)}
+    audioPlayer.addEventListener('timeupdate',()=>{const e=audioPlayer.currentTime;if(!(lyricIndex>=lyrics.length||e>lyrics[lyrics.length-1].end+1)){const t=lyrics[lyricIndex];e>=t.start&&e<t.end?!letrasElement.classList.contains("visible")&&(()=>{const s=t.end-t.start-.2;letrasElement.setAttribute("data-text",t.text),letrasElement.style.setProperty("--karaoke-duration",`${s<0?.5:s}s`),letrasElement.classList.add("visible")})():e>=t.end&&(letrasElement.classList.remove("visible"),lyricIndex++)}else letrasElement.classList.contains("visible")&&letrasElement.classList.remove("visible")});
+    audioPlayer.addEventListener('ended',()=>{letrasElement.classList.remove("visible"),setTimeout(()=>mensajeFinal.classList.remove("hidden"),1500),clearInterval(contadorInterval)});
+    function setupAudioAnalysis(){if(isAudioSetup)return;audioContext=new(window.AudioContext||window.webkitAudioContext),analyser=audioContext.createAnalyser(),analyser.fftSize=256,source=audioContext.createMediaElementSource(audioPlayer),source.connect(analyser),source.connect(audioContext.destination),dataArray=new Uint8Array(analyser.frequencyBinCount),isAudioSetup=!0,updateFrame()}
+    function updateFrame(){if(!isAudioSetup)return;analyser.getByteFrequencyData(dataArray);const e=dataArray.slice(0,10).reduce((e,t)=>e+t,0)/10;const t=1+(e/255)*.05,s=10+(e/255)*40;marcoPrincipal.style.transform=`scale(${t})`,marcoPrincipal.style.boxShadow=`0 0 ${s}px var(--shadow-color)`;const o=1+(e/255)*.02,a=(e/255)*15;infoSuperior.style.transform=`translateX(-50%) scale(${o})`,infoSuperior.style.textShadow=`0 0 ${a}px var(--shadow-color)`,infoInferior.style.transform=`translateX(-50%) scale(${o})`,infoInferior.style.textShadow=`0 0 ${a}px var(--shadow-color)`;marcosDecorativos.forEach(t=>{const s=1+(e/255)*.04,o=5+(e/255)*20;t.style.transform=`scale(${s})`,t.style.boxShadow=`0 0 ${o}px var(--shadow-color)`});requestAnimationFrame(updateFrame)}
+    const particleCanvas=document.getElementById("particle-canvas"),ctx=particleCanvas.getContext("2d");particleCanvas.width=window.innerWidth,particleCanvas.height=window.innerHeight;let particles=[];class Particle{constructor(){this.x=Math.random()*particleCanvas.width,this.y=Math.random()*particleCanvas.height,this.size=1+2*Math.random(),this.speedX=.5*Math.random()-.25,this.speedY=.5*Math.random()-.25,this.color="rgba(232, 138, 178, 0.5)"}update(){this.x+=this.speedX,this.y+=this.speedY,this.size>.1&&(this.size-=.01)}draw(){ctx.fillStyle=this.color,ctx.beginPath(),ctx.arc(this.x,this.y,this.size,0,2*Math.PI),ctx.fill()}}
+    function initParticles(){for(let e=0;e<100;e++)particles.push(new Particle)}
+    function animateParticles(){ctx.clearRect(0,0,particleCanvas.width,particleCanvas.height);for(let e=0;e<particles.length;e++)particles[e].update(),particles[e].draw(),particles[e].size<=.1&&(particles.splice(e,1),particles.push(new Particle),e--);requestAnimationFrame(animateParticles)}
+    setupPuzzle(),initParticles(),animateParticles();
+});
