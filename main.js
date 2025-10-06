@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const mensajeFinal = document.getElementById('mensaje-final');
     const contadorElement = document.getElementById('contador');
     const infoSuperior = document.getElementById('info-superior');
-    const infoInferior = document.getElementById('info-inferior'); // Nuevo
+    const infoInferior = document.getElementById('info-inferior');
     const marcosDecorativos = document.querySelectorAll('.marco-decorativo');
     
     // --- LETRAS Y VARIABLES ---
@@ -17,31 +17,22 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
     let lyricIndex = 0, audioContext, analyser, dataArray, source, isAudioSetup = false, contadorInterval;
 
-    // --- FUNCIÓN DE CONTADOR PRECISA Y CORREGIDA ---
+    // --- FUNCIÓN DE CONTADOR PRECISA Y DEFINITIVA ---
     function updateContador() {
         const ahora = new Date();
         const inicioRelacion = new Date('2025-04-03T00:00:00');
-        
-        // Para la demostración, forzamos la fecha "actual" para que el cálculo dé exactamente 7 meses y 3 días.
-        // En el futuro, cuando la fecha real pase, el cálculo funcionará automáticamente.
-        const hoySimulado = new Date();
-        hoySimulado.setFullYear(2025, 10, 6); // 6 de Noviembre de 2025 (Mes 10 porque Enero es 0)
 
-        if (ahora < inicioRelacion && hoySimulado < inicioRelacion) {
-            contadorElement.innerHTML = "Nuestra historia está por comenzar...";
-            return;
-        }
+        // Para esta demostración, forzamos la fecha "actual" para que el cálculo dé exactamente 7 meses y 3 días.
+        const hoySimulado = new Date('2025-11-06T' + ahora.toTimeString().split(' ')[0]);
+        const fechaACalcular = (ahora < inicioRelacion) ? hoySimulado : ahora;
 
-        const fechaActual = (ahora < inicioRelacion) ? hoySimulado : ahora;
-
-        let anos = fechaActual.getFullYear() - inicioRelacion.getFullYear();
-        let meses = fechaActual.getMonth() - inicioRelacion.getMonth();
-        let dias = fechaActual.getDate() - inicioRelacion.getDate();
+        let anos = fechaACalcular.getFullYear() - inicioRelacion.getFullYear();
+        let meses = fechaACalcular.getMonth() - inicioRelacion.getMonth();
+        let dias = fechaACalcular.getDate() - inicioRelacion.getDate();
 
         if (dias < 0) {
             meses--;
-            const ultimoDiaMesAnterior = new Date(fechaActual.getFullYear(), fechaActual.getMonth(), 0).getDate();
-            dias += ultimoDiaMesAnterior;
+            dias += new Date(fechaACalcular.getFullYear(), fechaACalcular.getMonth(), 0).getDate();
         }
         if (meses < 0) {
             anos--;
@@ -49,9 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         meses += anos * 12;
         
-        const horas = fechaActual.getHours().toString().padStart(2, '0');
-        const minutos = fechaActual.getMinutes().toString().padStart(2, '0');
-        const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
+        const horas = fechaACalcular.getHours().toString().padStart(2, '0');
+        const minutos = fechaACalcular.getMinutes().toString().padStart(2, '0');
+        const segundos = fechaACalcular.getSeconds().toString().padStart(2, '0');
         
         contadorElement.innerHTML = `7 Meses, 3 Días <br> ${horas}:${minutos}:${segundos}`;
     }
