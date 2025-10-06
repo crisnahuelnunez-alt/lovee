@@ -14,15 +14,23 @@
 
     <main id="inicio">
         <div id="puzzle-wrapper">
-            <h1>Cintia para empezar, coloca la pieza final en su lugar.</h1>
+            <h1>Cintia para empezar, coloca la pieza final en su lugar...</h1>
             <div id="puzzle-container"></div>
             <div id="puzzle-pieces"></div>
         </div>
     </main>
 
     <div id="sorpresa" class="hidden">
-        <div id="contador-container">
-            <h3 id="contador"></h3>
+        <div class="marco-decorativo marco-superior-izquierdo"></div>
+        <div class="marco-decorativo marco-superior-derecho"></div>
+
+        <div id="info-superior">
+            <div id="contador-container">
+                <h3 id="contador"></h3>
+            </div>
+            <div class="letras-recuadro">
+                <h2 id="letras" data-text=""></h2>
+            </div>
         </div>
 
         <div id="fireworks-container">
@@ -31,19 +39,14 @@
             <div class="firework"></div>
         </div>
 
-        <div id="marco-ritmico">
+        <div id="marco-ritmico-principal">
             <div class="marco-magico">
                 <div class="pantalla">
                     <div id="background-slideshow"></div>
                     <audio id="audio-player" src="assets/cancion.mp3" crossorigin="anonymous"></audio>
-
-                    <div class="letras-recuadro">
-                        <h2 id="letras" data-text=""></h2>
-                    </div>
-
                     <div id="mensaje-final" class="hidden">
                         <h1>Te amo, Cintia</h1>
-                        <p>Otro mes juntos</p>
+                        <p>Nuestro Viaje Juntos</p>
                     </div>
                 </div>
             </div>
@@ -53,4 +56,3 @@
     <script src="main.js"></script>
 </body>
 </html>
-
