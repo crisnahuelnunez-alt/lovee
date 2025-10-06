@@ -11,17 +11,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const PUZZLE_DIMENSION = 3;
     const TOTAL_PIECES = PUZZLE_DIMENSION * PUZZLE_DIMENSION;
 
-    // --- SINCRONIZACIÓN DE LETRAS (AJUSTADO PARA EL NUEVO EFECTO) ---
-    // Cada línea ahora tiene un 'start' y un 'end'
+    // --- LETRA DE LA CANCIÓN ACTUALIZADA Y SINCRONIZADA ---
+    // Puedes ajustar los segundos de 'start' y 'end' para una sincronización perfecta.
     const lyrics = [
-        { start: 20, end: 24.5, text: "POR QUE ERES UN CIELO LLENO DE ESTRELLAS" },
-        { start: 28, end: 30.5, text: "VOY A DARTE MI CORAZÓN" },
-        { start: 35, end: 39.5, text: "POR QUE ERES UN CIELO LLENO DE ESTRELLAS" },
-        { start: 43, end: 45.5, text: "POR QUE ILUMINAS EL CAMINO" },
-        { start: 51, end: 55, text: "VAMOS, DESTRÓZAME" },
-        { start: 58, end: 60.5, text: "NO ME IMPORTA SI LO HACES" },
-        { start: 66, end: 70, text: "POR QUE EN UN CIELO LLENO DE ESTRELLAS" },
-        { start: 71, end: 73.5, text: "CREO HABERTE VISTO" },
+        { start: 20.5, end: 24.5, text: "PORQUE ERES UN CIELO LLENO DE ESTRELLAS" },
+        { start: 28.5, end: 31, text: "TE DARÉ MI CORAZÓN" },
+        { start: 35.5, end: 39.5, text: "PORQUE ERES UN CIELO LLENO DE ESTRELLAS" },
+        { start: 43.0, end: 45.5, text: "PORQUE ILUMINAS EL CAMINO" },
+        { start: 50.5, end: 54, text: "NO ME IMPORTA, ADELANTE, DESPEDÁZAME" },
+        { start: 58.0, end: 60, text: "NO ME IMPORTA SI LO HACES" },
+        { start: 65.5, end: 69.5, text: "PORQUE EN UN CIELO LLENO DE ESTRELLAS" },
+        { start: 70.5, end: 72.5, text: "CREO QUE TE VI" },
+        // --- SEGUNDA PARTE ---
+        { start: 104.5, end: 108.5, text: "PORQUE ERES UN CIELO LLENO DE ESTRELLAS" },
+        { start: 112.0, end: 115.0, text: "ME QUIERO MORIR EN TUS BRAZOS" },
+        { start: 119.5, end: 123.0, text: "PORQUE CUANTO MÁS OSCURECE, MÁS TE ILUMINAS" },
+        { start: 126.5, end: 129.5, text: "TE DARÉ MI CORAZÓN" },
+        { start: 135.0, end: 138.5, text: "NO ME IMPORTA, ADELANTE, DESPEDÁZAME" },
+        { start: 142.5, end: 144.5, text: "NO ME IMPORTA SI LO HACES" },
+        { start: 150.0, end: 154.0, text: "PORQUE EN UN CIELO LLENO DE ESTRELLAS" },
+        { start: 154.5, end: 157.0, text: "CREO QUE TE VEO" },
+        // --- FINAL ---
+        { start: 204.0, end: 208.0, text: "ERES UN CIELO LLENO DE ESTRELLAS" },
+        { start: 208.5, end: 211.5, text: "UNA VISIÓN TAN CELESTIAL" }
     ];
     let lyricIndex = 0;
     let audioContext, analyser, dataArray, source;
@@ -31,10 +43,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function addDragDropListeners(e,t){e.addEventListener("dragstart",e=>{e.dataTransfer.setData("text/plain",e.target.dataset.pieceId),setTimeout(()=>e.target.classList.add("dragging"),0)}),e.addEventListener("dragend",e=>e.target.classList.remove("dragging")),t.addEventListener("dragover",e=>e.preventDefault()),t.addEventListener("drop",s=>{s.preventDefault(),s.currentTarget.dataset.slotId===s.dataTransfer.getData("text/plain")&&(s.currentTarget.classList.remove("empty"),s.currentTarget.style.border="none",e.style.display="none",startSurprise())})}
     function startSurprise(){inicioScreen.style.transition="opacity 1.5s ease",inicioScreen.style.opacity="0",setTimeout(()=>{inicioScreen.classList.add("hidden"),sorpresaScreen.classList.remove("hidden"),isAudioSetup||setupAudioAnalysis(),audioContext.resume().then(()=>{audioPlayer.play().catch(e=>console.error("Error al reproducir audio:",e))})},1500)}
     
-    // --- LÓGICA DE LETRAS MODIFICADA ---
     audioPlayer.addEventListener('timeupdate', () => {
         const currentTime = audioPlayer.currentTime;
-        // Si la canción termina, o si el tiempo actual ya pasó la última letra
         if (lyricIndex >= lyrics.length || currentTime > lyrics[lyrics.length - 1].end + 1) {
             if (letrasElement.classList.contains('visible')) {
                 letrasElement.classList.remove('visible');
@@ -44,18 +54,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const currentLyric = lyrics[lyricIndex];
 
-        // Muestra la letra cuando empieza su tiempo
         if (currentTime >= currentLyric.start && currentTime < currentLyric.end) {
             if (!letrasElement.classList.contains('visible')) {
-                // Prepara la nueva letra
-                const duration = (currentLyric.end - currentLyric.start) - 0.2; // Duración de la animación
+                const duration = (currentLyric.end - currentLyric.start) - 0.2;
                 letrasElement.setAttribute('data-text', currentLyric.text);
-                // La transición del CSS se ajusta dinámicamente a la duración de la frase
                 letrasElement.style.setProperty('--karaoke-duration', `${duration < 0 ? 0.5 : duration}s`);
                 letrasElement.classList.add('visible');
             }
         } 
-        // Oculta la letra cuando termina su tiempo
         else if (currentTime >= currentLyric.end) {
             letrasElement.classList.remove('visible');
             lyricIndex++;
