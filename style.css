@@ -5,7 +5,6 @@
     --shadow-color: rgba(232, 138, 178, 0.5);
     --font-heading: 'Great Vibes', cursive;
     --font-body: 'Raleway', sans-serif;
-    /* Nueva fuente para las letras */
     --font-lyrics: 'Montserrat', sans-serif;
 }
 
@@ -21,65 +20,117 @@ body {
 
 #particle-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1}
 .hidden{display:none!important}
-#inicio{display:flex;justify-content:center;align-items:center;height:100vh;position:relative;z-index:3;padding:20px;box-sizing:border-box}
-#puzzle-wrapper{text-align:center;background:rgba(0,0,0,.3);padding:20px 30px;border-radius:20px}
-#puzzle-wrapper h1{font-family:var(--font-body);font-weight:300;font-size:clamp(1rem,4vw,1.5rem);margin-bottom:20px;color:var(--accent-color)}
-#puzzle-container{display:grid;grid-template-columns:repeat(3,100px);grid-template-rows:repeat(3,100px);border:2px solid var(--accent-color);border-radius:10px;background-color:rgba(0,0,0,.2);margin-bottom:20px;gap:0}
-.puzzle-slot{width:100px;height:100px;box-sizing:border-box;background-image:url(assets/foto5.jpg);background-size:300px 300px}
-.puzzle-slot.empty{background-image:none;border:2px dashed rgba(255,255,255,.3)}
-#puzzle-pieces{display:flex;justify-content:center;align-items:center;min-height:110px}
-.puzzle-piece{width:100px;height:100px;background-image:url(assets/foto5.jpg);background-size:300px 300px;cursor:grab;transition:transform .2s ease,box-shadow .2s ease;border-radius:5px;border:1px solid var(--accent-color)}
+
+/* --- ESTILOS DEL ROMPECABEZAS (AHORA RESPONSIVE) --- */
+#inicio {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    position: relative;
+    z-index: 3;
+    padding: 1rem; /* Usamos rem para espaciado flexible */
+    box-sizing: border-box;
+}
+
+#puzzle-wrapper {
+    text-align: center;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 1rem 1.5rem;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 400px; /* Limite para que no sea gigante en tablets */
+}
+
+#puzzle-wrapper h1 {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-size: clamp(1rem, 4.5vw, 1.5rem);
+    margin-bottom: 20px;
+    color: var(--accent-color);
+}
+
+#puzzle-container {
+    display: grid;
+    /* Las columnas ahora son fracciones del espacio disponible */
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    border: 2px solid var(--accent-color);
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.2);
+    margin: 0 auto 20px auto; /* Centrado */
+    width: 80vw; /* El contenedor ocupa el 80% del ancho de la pantalla */
+    max-width: 300px; /* Límite para pantallas grandes */
+    aspect-ratio: 1 / 1; /* Mantiene la forma cuadrada */
+}
+
+.puzzle-slot {
+    width: 100%; /* Las piezas ocupan el 100% de su celda */
+    height: 100%;
+    box-sizing: border-box;
+    background-image: url('assets/foto5.jpg');
+    /* El fondo ahora es 300% para que cada pieza muestre 1/3 de la imagen */
+    background-size: 300% 300%;
+}
+
+.puzzle-slot.empty {
+    background-image: none;
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+}
+
+#puzzle-pieces {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(26.6vw + 10px); /* Altura dinámica basada en el tamaño de la pieza */
+    max-height: 110px;
+}
+
+.puzzle-piece {
+    width: 26.6vw; /* 1/3 del ancho del contenedor del rompecabezas */
+    height: 26.6vw;
+    max-width: 100px;
+    max-height: 100px;
+    background-image: url('assets/foto5.jpg');
+    background-size: 300% 300%;
+    cursor: grab;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 5px;
+    border: 1px solid var(--accent-color);
+}
+
 .puzzle-piece:hover{transform:scale(1.1);box-shadow:0 0 15px var(--shadow-color)}
 .puzzle-piece.dragging{cursor:grabbing;opacity:.5}
+
+/* --- PANTALLA DE SORPRESA (MOBILE FIRST) --- */
 #sorpresa{display:flex;justify-content:center;align-items:center;height:100vh;position:relative;z-index:2;animation:fadeIn 2s ease}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 #marco-ritmico{position:relative;padding:10px;border-radius:20px;transition:box-shadow .1s ease-out,transform .1s ease-out}
-.marco-magico{width:60vw;max-width:500px;position:relative;z-index:3;box-shadow:0 0 40px rgba(0,0,0,.8);border-radius:15px;padding-bottom:56.25%;height:0}
+
+.marco-magico {
+    width: 90vw; /* En móvil, ocupa casi toda la pantalla */
+    position: relative;
+    z-index: 3;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+    border-radius: 15px;
+    padding-bottom: 56.25%;
+    height: 0;
+}
+
 .pantalla{position:absolute;top:0;left:0;width:100%;height:100%;background:#000;border-radius:15px;overflow:hidden}
 #background-slideshow{position:absolute;width:100%;height:100%;background-size:cover;background-position:center;animation:kenburns 35s infinite}
 @keyframes kenburns{0%{background-image:url(assets/foto1.jpg);transform:scale(1);opacity:1}18%{transform:scale(1.05)}20%{opacity:0}20.1%{background-image:url(assets/foto2.jpg);transform:scale(1);opacity:1}38%{transform:scale(1.05)}40%{opacity:0}40.1%{background-image:url(assets/foto3.jpg);transform:scale(1);opacity:1}58%{transform:scale(1.05)}60%{opacity:0}60.1%{background-image:url(assets/foto4.jpg);transform:scale(1);opacity:1}78%{transform:scale(1.05)}80%{opacity:0}80.1%{background-image:url(assets/foto5.jpg);transform:scale(1);opacity:1}98%{transform:scale(1.05)}100%{opacity:0}}
 .superposicion-letras{position:absolute;bottom:15%;left:0;width:100%;text-align:center;pointer-events:none}
 
-/* ---- MODIFICACIÓN COMPLETA: Estilo de letras tipo karaoke ---- */
-#letras {
-    font-family: var(--font-lyrics);
-    font-weight: 700;
-    font-size: clamp(1.2rem, 3.5vw, 2rem);
-    text-transform: uppercase; /* Todo en mayúsculas como en el video */
-    color: rgba(255, 255, 255, 0.4); /* Color base del texto (grisáceo) */
-    position: relative;
-    display: inline-block;
-    padding: 5px;
-    transition: all 0.5s ease;
-    opacity: 0; /* Inicia invisible */
-}
-
-/* Usamos un pseudo-elemento para crear el texto de color que se superpone */
-#letras::before {
-    content: attr(data-text); /* Copia el texto del elemento padre */
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 0; /* Inicia sin ancho */
-    height: 100%;
-    color: white; /* Color del texto que se "llena" */
-    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.5); /* Borde sutil para legibilidad */
-    overflow: hidden;
-    transition: width 0.5s linear; /* La animación clave es la transición del ancho */
-}
-
-#letras.visible {
-    opacity: 1; /* Hace visible la letra base */
-}
-
-#letras.visible::before {
-    /* La duración de la transición se controlará desde JavaScript */
-    width: 100%; /* Al volverse visible, el relleno se anima al 100% */
-}
+#letras{font-family:var(--font-lyrics);font-weight:700;font-size:clamp(1.2rem,5vw,2rem);text-transform:uppercase;color:rgba(255,255,255,.4);position:relative;display:inline-block;padding:5px;transition:all .5s ease;opacity:0}
+#letras::before{content:attr(data-text);position:absolute;top:0;left:0;width:0;height:100%;color:#fff;-webkit-text-stroke:1px rgba(0,0,0,.5);overflow:hidden;transition:width var(--karaoke-duration, .5s) linear;}
+#letras.visible{opacity:1}
+#letras.visible::before{width:100%}
 
 #mensaje-final{position:absolute;width:100%;height:100%;background:radial-gradient(circle,rgba(18,14,22,.8) 0,rgba(18,14,22,1) 80%);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;animation:fadeIn 2s;z-index:5}
-#mensaje-final h1{font-family:var(--font-heading);font-size:clamp(2rem,8vw,5rem);color:var(--accent-color);margin:0}
-#mensaje-final p{font-size:clamp(1rem,3vw,1.5rem);font-weight:300;margin-top:10px}
+#mensaje-final h1{font-family:var(--font-heading);font-size:clamp(2.5rem,12vw,5rem);color:var(--accent-color);margin:0}
+#mensaje-final p{font-size:clamp(1rem,4vw,1.5rem);font-weight:300;margin-top:10px}
+
 #fireworks-container{position:fixed;top:0;left:0;width:100%;height:100%;z-index:2;pointer-events:none}
 @keyframes firework{0%{transform:translate(var(--x),var(--initialY));width:var(--initialSize);opacity:1}50%{width:.5vmin;opacity:1}100%{width:var(--finalSize);opacity:0}}
 .firework,.firework::before,.firework::after{--initialSize: .5vmin;--finalSize: 45vmin;--particleSize: .2vmin;--color1: #e88ab2;--color2: #f0e8f8;--color3: #fff;--y: -50%;--x: -50%;--initialY: 100vh;content:"";animation:firework 2s infinite;position:absolute;top:80%;left:50%;transform:translate(-50%,var(--y));width:var(--initialSize);aspect-ratio:1;background:radial-gradient(circle,var(--color1) var(--particleSize),transparent 0) 50% 0,radial-gradient(circle,var(--color2) var(--particleSize),transparent 0) 100% 50%,radial-gradient(circle,var(--color3) var(--particleSize),transparent 0) 50% 100%,radial-gradient(circle,var(--color1) var(--particleSize),transparent 0) 0% 50%;background-size:var(--initialSize) var(--initialSize);background-repeat:no-repeat}
@@ -87,5 +138,11 @@ body {
 .firework::after{transform:translate(-50%,-50%) rotate(-37deg)!important}
 .firework:nth-child(2){left:20%;animation-delay:-.4s}
 .firework:nth-child(3){left:80%;animation-delay:-.8s}
-@media (max-width:768px){#puzzle-container,.puzzle-slot{grid-template-columns:repeat(3,80px);grid-template-rows:repeat(3,80px);background-size:240px 240px}.puzzle-piece{width:80px;height:80px}.marco-magico{width:90vw;max-width:none}}
-@media (max-width:480px){#puzzle-wrapper{padding:15px}#puzzle-container,.puzzle-slot{grid-template-columns:repeat(3,60px);grid-template-rows:repeat(3,60px);background-size:180px 180px}.puzzle-piece{width:60px;height:60px}#puzzle-pieces{min-height:70px}}
+
+/* --- ESTILOS PARA TABLET Y DESKTOP --- */
+@media (min-width: 768px) {
+    .marco-magico {
+        width: 60vw; /* En pantallas grandes, el marco es más pequeño */
+        max-width: 500px;
+    }
+}
