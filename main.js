@@ -21,10 +21,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateContador() {
         const ahora = new Date();
         const inicioRelacion = new Date('2025-04-03T00:00:00');
-
-        // Para esta demostración, forzamos la fecha "actual" para que el cálculo dé exactamente 7 meses y 3 días.
-        const hoySimulado = new Date('2025-11-06T' + ahora.toTimeString().split(' ')[0]);
-        const fechaACalcular = (ahora < inicioRelacion) ? hoySimulado : ahora;
+        
+        let fechaACalcular = ahora;
+        // Si la fecha real aún no ha llegado, usamos una fecha simulada para la demostración
+        if (ahora < inicioRelacion) {
+            const hoySimulado = new Date();
+            // Simulamos ser el 6 de Noviembre de 2025 para que el cálculo de 7 meses y 3 días sea correcto.
+            hoySimulado.setFullYear(2025, 10, 6, ahora.getHours(), ahora.getMinutes(), ahora.getSeconds());
+            fechaACalcular = hoySimulado;
+        }
 
         let anos = fechaACalcular.getFullYear() - inicioRelacion.getFullYear();
         let meses = fechaACalcular.getMonth() - inicioRelacion.getMonth();
