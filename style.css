@@ -15,6 +15,8 @@ body{background:linear-gradient(#0007,#0000),var(--bg-color);margin:0;height:100
 #puzzle-wrapper{text-align:center;background:rgba(0,0,0,.3);padding:1rem 1.5rem;border-radius:20px;width:100%;max-width:400px}
 #puzzle-wrapper h1{font-family:var(--font-body);font-weight:300;font-size:clamp(1rem,4.5vw,1.5rem);margin-bottom:20px;color:var(--accent-color)}
 #puzzle-container{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);border:2px solid var(--accent-color);border-radius:10px;background-color:rgba(0,0,0,.2);margin:0 auto 20px auto;width:80vw;max-width:300px;aspect-ratio:1/1}
+
+/* ---- CORRECCIÓN PARA LA IMAGEN DEL ROMPECABEZAS ---- */
 .puzzle-slot{width:100%;height:100%;box-sizing:border-box;background-image:url(assets/foto5.jpg);background-size:300% 300%}
 .puzzle-slot.empty{background-image:none;border:2px dashed rgba(255,255,255,.3)}
 #puzzle-pieces{display:flex;justify-content:center;align-items:center;min-height:calc(26.6vw + 10px);max-height:110px}
@@ -23,65 +25,24 @@ body{background:linear-gradient(#0007,#0000),var(--bg-color);margin:0;height:100
 #sorpresa{position:relative;width:100%;height:100%;animation:fadeIn 2s ease}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
-/* --- CAPAS DE VISUALIZACIÓN --- */
-#capa-visuales, #capa-ui {
-    position: absolute; top: 0; left: 0;
-    width: 100%; height: 100%;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-}
+#capa-visuales, #capa-ui {position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;}
 #capa-visuales { z-index: 10; }
 #capa-ui { z-index: 20; pointer-events: none; }
 
-.marco-decorativo{
-    position:fixed;
-    width: 15vw; height: 15vw;
-    max-width: 120px; max-height: 120px;
-    border: 2px solid var(--accent-color);
-    z-index: 15;
-    transition: transform .1s ease-out, box-shadow .1s ease-out;
-    display: flex; align-items: center; justify-content: center;
-    font-family: var(--font-heading);
-    font-size: clamp(3rem, 10vw, 5rem);
-    color: var(--accent-color);
-    text-shadow: 0 0 15px var(--shadow-color);
-}
+.marco-decorativo{position:fixed;width:15vw;height:15vw;max-width:120px;max-height:120px;border:2px solid var(--accent-color);z-index:15;transition:transform .1s ease-out,box-shadow .1s ease-out;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:clamp(3rem,10vw,5rem);color:var(--accent-color);text-shadow:0 0 15px var(--shadow-color)}
 .marco-superior-izquierdo{top:20px;left:20px;border-top-left-radius:20px}
 .marco-superior-derecho{top:20px;right:20px;border-top-right-radius:20px}
 
-#info-superior, #info-inferior {
-    width: 90%; max-width: 800px; text-align: center;
-    position: fixed; left: 50%;
-    transform: translateX(-50%);
-    transition: transform .1s ease-out, text-shadow .1s ease-out;
-    pointer-events: auto;
-}
+#info-superior, #info-inferior {width: 90%; max-width: 800px; text-align: center; position: fixed; left: 50%; transform: translateX(-50%); transition: transform .1s ease-out, text-shadow .1s ease-out; pointer-events: auto;}
 #info-superior { top: 20px; }
 #info-inferior { bottom: 20px; }
 
-#contador-container, .letras-recuadro {
-    padding: 10px; font-family: var(--font-body);
-    background-color: rgba(0,0,0,0.6); 
-    border-radius: 15px;
-    backdrop-filter: blur(4px);
-}
+#contador-container, .letras-recuadro {padding:10px;font-family:var(--font-body);background-color:rgba(0,0,0,0.6);border-radius:15px;backdrop-filter:blur(4px)}
 #contador-container{color:var(--accent-color);font-weight:400;font-size:clamp(1rem,4vw,1.5rem);text-shadow:0 0 10px var(--shadow-color)}
 #contador-container h3{margin:0;line-height:1.4}
-.letras-recuadro{min-height:90px; padding: 15px; box-sizing: border-box; display:flex;align-items:center;justify-content:center}
+.letras-recuadro{min-height:90px;padding:15px;box-sizing:border-box;display:flex;align-items:center;justify-content:center}
 
-#letras{
-    font-family:var(--font-lyrics);
-    font-weight:700;
-    font-size: clamp(1.5rem, 5.5vw, 2.4rem);
-    text-transform:uppercase;
-    color:rgba(255,255,255,.4);
-    position:relative;
-    display:inline-block;
-    padding:5px;
-    transition:all .5s ease;
-    opacity:0;
-    line-height:1.3;
-}
+#letras{font-family:var(--font-lyrics);font-weight:700;font-size:clamp(1.5rem,5.5vw,2.4rem);text-transform:uppercase;color:rgba(255,255,255,.4);position:relative;display:inline-block;padding:5px;transition:all .5s ease;opacity:0;line-height:1.3}
 #letras::before{content:attr(data-text);position:absolute;top:0;left:0;width:0;height:100%;color:var(--accent-color);-webkit-text-stroke:1px rgba(0,0,0,.5);overflow:hidden;transition:width var(--karaoke-duration, .5s) linear}
 #letras.visible{opacity:1}
 #letras.visible::before{width:100%}
